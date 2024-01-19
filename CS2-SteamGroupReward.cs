@@ -45,7 +45,7 @@ public class CS2_SteamGroupReward : BasePlugin, IPluginConfig<SteamGroupRewardCo
 	{
 		if (config.Group_ID == 0)
 		{
-			throw new Exception($"Invalid value has been set for config value `Channel_ID`");
+			throw new Exception($"Invalid value has been set for config value `Group_ID`");
 		}
 
 		SteamGroupInfoUrl = SteamGroupInfoUrl.Replace("GROUP_ID", (1429521408 + config.Group_ID).ToString());
