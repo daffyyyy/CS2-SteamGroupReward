@@ -1,5 +1,8 @@
 # CS2-SteamGroupReward
 
+### Do you appreciate what I do? Buy me a cup of tea ❤️
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y4THKXG)
+
 ### Description
 A plugin that grants bonuses for being a member of a steam group
 
