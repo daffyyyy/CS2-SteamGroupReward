@@ -27,9 +27,9 @@ public class CS2_SteamGroupReward : BasePlugin, IPluginConfig<SteamGroupRewardCo
 	HashSet<SteamID> MembersCache = new HashSet<SteamID>();
 
 	public override string ModuleName => "CS2-SteamGroupReward";
-	public override string ModuleVersion => "1.0.0";
+	public override string ModuleVersion => "1.0.0a";
 	public override string ModuleAuthor => "daffyy";
-	public override string ModuleDescription => "A plugin that grants privileges for being a member of a steam group";
+	public override string ModuleDescription => "A plugin that grants bonuses for being a member of a steam group";
 
 	public override void Load(bool hotReload)
 	{
@@ -61,27 +61,35 @@ public class CS2_SteamGroupReward : BasePlugin, IPluginConfig<SteamGroupRewardCo
 
 		if (player.PlayerPawn.Value != null && MembersCache.Contains(player.AuthorizedSteamID))
 		{
-			if (player.InGameMoneyServices != null)
+			if (player.InGameMoneyServices != null && Config.Reward_Spawn_Money > 0)
 				player.InGameMoneyServices.Account += Config.Reward_Spawn_Money;
 
 			AddTimer(0.1f, () =>
 			{
-				if (player.PlayerPawn.Value.ItemServices != null && Config.Reward_Spawn_Armor == 100)
-					new CCSPlayer_ItemServices(player.PlayerPawn.Value.ItemServices.Handle).HasHelmet = true;
 
-				player.PlayerPawn.Value.ArmorValue = Config.Reward_Spawn_Armor;
-				player.PawnArmor = Config.Reward_Spawn_Armor;
-
-				if (Config.Reward_Spawn_HP > 100)
+				if (Config.Reward_Spawn_Armor > 0)
 				{
-					player.PlayerPawn.Value.MaxHealth = Config.Reward_Spawn_HP;
-					player.MaxHealth = Config.Reward_Spawn_HP;
+					if (player.PlayerPawn.Value.ItemServices != null && Config.Reward_Spawn_Armor == 100)
+						new CCSPlayer_ItemServices(player.PlayerPawn.Value.ItemServices.Handle).HasHelmet = true;
+
+					player.PlayerPawn.Value.ArmorValue = Config.Reward_Spawn_Armor;
+					player.PawnArmor = Config.Reward_Spawn_Armor;
 				}
 
-				player.PlayerPawn.Value.Health = Config.Reward_Spawn_HP;
-				player.Health = Config.Reward_Spawn_HP;
+				if (Config.Reward_Spawn_HP > 0)
+				{
+					if (Config.Reward_Spawn_HP > 100)
+					{
+						player.PlayerPawn.Value.MaxHealth = Config.Reward_Spawn_HP;
+						player.MaxHealth = Config.Reward_Spawn_HP;
+					}
 
-				Utilities.SetStateChanged(player.PlayerPawn.Value, "CBaseEntity", "m_iHealth");
+					player.PlayerPawn.Value.Health = Config.Reward_Spawn_HP;
+					player.Health = Config.Reward_Spawn_HP;
+
+					Utilities.SetStateChanged(player.PlayerPawn.Value, "CBaseEntity", "m_iHealth");
+				}
+
 			});
 		}
 
@@ -98,15 +106,17 @@ public class CS2_SteamGroupReward : BasePlugin, IPluginConfig<SteamGroupRewardCo
 
 		if (player.PlayerPawn.Value != null && MembersCache.Contains(player.AuthorizedSteamID))
 		{
-			if (player.InGameMoneyServices != null)
+			if (player.InGameMoneyServices != null && Config.Reward_Spawn_Money > 0)
 				player.InGameMoneyServices.Account += Config.Reward_Spawn_Money;
 
-			if (Config.Reward_Kill_HP > 100)
-				player.PlayerPawn.Value.MaxHealth = Config.Reward_Kill_HP;
-			player.PlayerPawn.Value.Health += Config.Reward_Kill_HP;
+			if (Config.Reward_Kill_HP > 0)
+			{
+				if (Config.Reward_Kill_HP > 100)
+					player.PlayerPawn.Value.MaxHealth = Config.Reward_Kill_HP;
+				player.PlayerPawn.Value.Health += Config.Reward_Kill_HP;
 
-
-			Utilities.SetStateChanged(player.PlayerPawn.Value, "CBaseEntity", "m_iHealth");
+				Utilities.SetStateChanged(player.PlayerPawn.Value, "CBaseEntity", "m_iHealth");
+			}
 		}
 
 		return HookResult.Continue;
